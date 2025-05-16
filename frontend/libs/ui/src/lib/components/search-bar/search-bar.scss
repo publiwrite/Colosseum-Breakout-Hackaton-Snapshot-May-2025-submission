@@ -1,0 +1,14 @@
+.search-bar-wrapper {
+  @apply w-full flex flex-col lg:flex-row items-stretch rounded-lg lg:overflow-hidden;
+  @apply border-[1.5px] border-gray-400 dark:border-gray-dark-600;
+  @apply focus-within:border-purple-500 dark:focus-within:border-purple-300;
+  @apply transition-colors duration-200 ease-in-out;
+}
+.search-bar-anchor {
+  @apply w-full;
+}
+
+// Fix: Disable input on search when another dropdown is open to prevent action with it.
+body[data-scroll-locked='1'] .search-bar-anchor {
+  pointer-events: none;
+}

@@ -1,0 +1,1 @@
+export const DEFAULT_MIN_PRICE_IN_CENTS = 50;

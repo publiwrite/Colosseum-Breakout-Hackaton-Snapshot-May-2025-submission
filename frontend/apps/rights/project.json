@@ -1,0 +1,80 @@
+{
+  "name": "rights",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/rights",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/rights"
+      },
+      "configurations": {
+        "local": {},
+        "development": {},
+        "staging": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "local",
+      "options": {
+        "buildTarget": "rights:build",
+        "dev": true
+      },
+      "configurations": {
+        "local": {
+          "buildTarget": "rights:build:local",
+          "dev": true,
+          "port": 4205
+        },
+        "development": {
+          "buildTarget": "rights:build:development",
+          "dev": true,
+          "port": 4205
+        },
+        "staging": {
+          "buildTarget": "rights:build:staging",
+          "dev": true,
+          "port": 4205
+        },
+        "production": {
+          "buildTarget": "rights:build:production",
+          "dev": false,
+          "port": 4205
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "rights:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/rights/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/rights/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

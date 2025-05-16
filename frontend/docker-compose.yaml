@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  rights:
+    container_name: rights
+    image: ${IMAGE_NAME}
+    build:
+      context: .
+      dockerfile: ./apps/rights/Dockerfile
+    ports:
+      - '4205:4205'

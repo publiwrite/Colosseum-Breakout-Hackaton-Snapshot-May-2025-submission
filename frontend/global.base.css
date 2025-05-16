@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --generic-header-height: 52px;
+  --generic-mobile-sidebar-width: 52px;
+  --footer-top-margin: theme('spacing.4');
+}
+
+@media (min-width: theme('screens.sm')) {
+  :root {
+    --footer-top-margin: theme('spacing.8');
+  }
+}
+
+@media (min-width: theme('screens.md')) {
+  :root {
+    --generic-header-height: 60px;
+  }
+}
+
+@media (min-width: theme('screens.md')) {
+  :root {
+    --generic-header-height: 80px;
+  }
+}
+
+.no-scrollbar {
+  @apply [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none];
+}
+
+/* Skeleton loader generic */
+.skeleton-loader {
+  user-select: none;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 9999999999px theme('colors.gray.300');
+  background-color: transparent !important;
+  color: transparent !important;
+  border: transparent !important;
+
+  @apply animate-pulse relative overflow-hidden;
+}
+.skeleton-loader:is(.dark *) {
+  box-shadow: inset 0 0 0 9999999999px theme('colors.gray.700');
+}
+.skeleton-loader * {
+  @apply invisible;
+}
+.skeleton-loader::placeholder {
+  @apply invisible;
+}
+
+/* Body layout */
+.workspace-body {
+  @apply bg-gray-100 dark:bg-gray-dark-900;
+  @apply min-h-[100dvh] flex flex-col;
+}
+.workspace-body__main {
+  @apply flex-1;
+}
+
+hr {
+  @apply m-0 p-0 border-gray-300 dark:border-gray-dark-600;
+}

@@ -1,0 +1,9 @@
+.search-input-wrapper {
+  @apply relative h-full;
+  @apply flex items-stretch gap-2;
+
+  &:is([data-transparent='true'] *) {
+    @apply bg-white dark:bg-gray-dark-800;
+    @apply border-gray-300 dark:border-gray-dark-600;
+  }
+}

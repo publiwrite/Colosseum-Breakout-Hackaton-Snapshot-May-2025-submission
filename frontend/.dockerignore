@@ -1,0 +1,7 @@
+node-modules
+.husky
+.idea
+.nx
+.vscode
+.next
+**/dist/

@@ -1,0 +1,12 @@
+:root {
+  --left-bar-width: 284px;
+  --right-bar-width: 284px;
+}
+
+/* XL DESKTOP */
+@media (min-width: theme('screens.xl')) {
+  :root {
+    --left-bar-width: 344px;
+    --right-bar-width: 344px;
+  }
+}
