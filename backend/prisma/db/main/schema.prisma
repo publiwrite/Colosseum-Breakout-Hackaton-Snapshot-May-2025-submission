@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../clients/main"
+  previewFeatures = ["tracing", "metrics"]
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+generator kysely {
+  provider = "prisma-kysely"
+
+  // Optionally provide a destination directory for the generated file
+  // and a filename of your choice
+  output       = "../../kysely/db"
+  fileName     = "types.ts"
+  // Optionally generate runtime enums to a separate file
+  enumFileName = "enums.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String                @id @default(uuid())
+  username           String                @unique
+  oauthProviders     OauthProvider[]
+  wallets            Wallet[]
+  bookLicenseAuthors R_BookLicenseAuthor[]
+  bookLicenseOrders  R_BookLicenseOrder[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  R_BookLicense      R_BookLicense[]
+}
+
+model Wallet {
+  address   String
+  isPrimary Boolean
+
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OauthProvider {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  users User[]
+}
+
+enum R_BtcInscriptionStatus {
+  NOT_STARTED
+  CREATING_BTC_INSCRIPTION
+  BTC_INSCRIPTION_CREATED
+}
+
+enum R_TypeOfRights {
+  TRAINING_RIGHTS
+  REFERENCE_RIGHTS
+  BOTH
+}
+
+model R_BookLicense {
+  id                 String @id @default(uuid())
+  title              String
+  description        String
+  priceInCents       BigInt
+  manuscriptAssetKey String
+  coverAssetKey      String
+  coverAssetCid      String
+  ownerWalletAddress String
+
+  btcInscriptionStatus R_BtcInscriptionStatus @default(NOT_STARTED)
+  btcInscriptionId     String?
+
+  isForCommercialUse Boolean
+  typeOfRights       R_TypeOfRights
+  isbn               String?
+
+  ownerUserId String
+  user        User   @relation(fields: [ownerUserId], references: [id])
+
+  genres  Genre[]
+  authors R_BookLicenseAuthor[]
+  orders  R_BookLicenseOrder[]
+
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+  metadata  R_BookLicenseMetadata?
+}
+
+model R_BookLicenseMetadata {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  pages     Int
+  tokens    Int
+  hash      String
+
+  bookLicense   R_BookLicense @relation(fields: [bookLicenseId], references: [id])
+  bookLicenseId String        @unique
+}
+
+model R_BookLicenseAuthor {
+  id   String @id @default(uuid())
+  name String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  bookLicenses R_BookLicense[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum R_BookLicenseOrderStatus {
+  PENDING_TRANSACTION
+  PAYMENT_FAILED
+  PAID
+}
+
+model R_BookLicenseOrder {
+  id String @id @default(uuid())
+
+  status R_BookLicenseOrderStatus @default(PENDING_TRANSACTION)
+
+  solanaPNftAddress     String?
+  solanaPNftTxSignature String?
+
+  postPaymentTxSignature String?
+
+  signedTemplateAssetKey String?
+  signedTemplateIpfsCid  String?
+
+  buyerUserId String
+  buyer       User   @relation(fields: [buyerUserId], references: [id])
+
+  bookLicenseId String
+  bookLicense   R_BookLicense @relation(fields: [bookLicenseId], references: [id])
+
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  helioOrder R_HelioOrder?
+}
+
+model R_HelioOrder {
+  id            String  @id @default(uuid())
+  paymentLinkId String  @unique
+  webhookId     String?
+  webhookSecret String?
+
+  orderId String             @unique
+  order   R_BookLicenseOrder @relation(fields: [orderId], references: [id])
+
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  helioTransaction R_HelioTransaction?
+}
+
+model R_HelioTransaction {
+  id          String                 @id @default(uuid())
+  sender      String
+  receiver    String
+  signature   String?
+  tokenSymbol String?
+  currencyId  String?
+  fee         BigInt
+  status      HelioTransactionStatus
+
+  helioOrderId String       @unique
+  order        R_HelioOrder @relation(fields: [helioOrderId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

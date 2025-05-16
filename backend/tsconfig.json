@@ -1,0 +1,36 @@
+{
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  },
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@libs/core": ["libs/core/src"],
+      "@libs/core/*": ["libs/core/src/*"],
+      "@libs/modules": ["libs/modules/src"],
+      "@libs/modules/*": ["libs/modules/src/*"],
+      "@libs/utils": ["libs/utils/src"],
+      "@libs/utils/*": ["libs/utils/src/*"],
+      "@lib/common": ["libs/common/src"],
+      "@lib/common/*": ["libs/common/src/*"],
+      "@prisma-clients/*": ["prisma/clients/*"]
+    },
+    "jsx": "react"
+  }
+}
